@@ -93,20 +93,31 @@ class LibraryServiceTest {
 
     @Test
     public void testBorrowBookMaxsReached() throws SQLException {
-        User user = new User(userId);
-        user.getBorrowedBooksCount(5);
+        // Definir el número máximo de libros que se pueden prestar
+        int maxBorrowedBooks = 5;
 
+        // Crear un usuario con el número máximo de libros prestados
+        User user = new User(userId);
+        for (int i = 0; i < maxBorrowedBooks; i++) {
+            user.borrowBook(new Book("book" + i));  // Simular libros prestados
+        }
+
+        // Crear un nuevo libro para intentar tomar prestado
         Book book = new Book(bookId);
 
+        // Configurar los mocks
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(bookRepository.findById(bookId)).thenReturn((Optional.of(book)));
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
-        Exception exception = assertThrows(MaxBooksBorrowedException.class, () ->{
+        // Verificar que se lanza la excepción MaxBooksBorrowedException
+        MaxBooksBorrowedException exception = assertThrows(MaxBooksBorrowedException.class, () -> {
             libraryService.borrowBook(userId, bookId);
         });
 
-        assertEquals("User has already borrowed the maximum of book", exception.getMessage());
+        // Comprobar el mensaje de la excepción
+        assertEquals("User has already borrowed the maximum number of books", exception.getMessage());
     }
+
 
     @Test
     public  void testReturnBookSuccess() throws  Exception {
@@ -134,10 +145,10 @@ class LibraryServiceTest {
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
         Exception exception = assertThrows(BookNotBorrowedByUserException.class,() ->{
-            libraryService.borrowBook(userId, bookId);
+            libraryService.returnBook(userId, bookId);
         } );
 
-        assertEquals("This book, was not borrowed by this user", exception.getMessage());
+        assertEquals("This book was not borrowed by this user", exception.getMessage());
     }
 
 

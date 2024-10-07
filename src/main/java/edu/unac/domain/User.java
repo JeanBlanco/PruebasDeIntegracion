@@ -37,9 +37,10 @@ public class User {
         borrowedBooks.remove(book);
     }
 
-    public int getBorrowedBooksCount(int i) {
-        return borrowedBooks.size();
+    public int getBorrowedBooksCount() {
+        return borrowedBooks.size(); // Devuelve el número de libros prestados
     }
+
 
     public void setName(String name) {
         this.name = name;

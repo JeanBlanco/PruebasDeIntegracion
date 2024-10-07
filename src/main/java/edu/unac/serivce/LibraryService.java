@@ -31,7 +31,7 @@ public class LibraryService {
             throw new BookAlreadyBorrowedException("Book is already borrowed");
         }
 
-        if (user.getBorrowedBooksCount(5) >= maxBorrowedBooks) {
+        if (user.getBorrowedBooksCount() >= maxBorrowedBooks) {
             throw new MaxBooksBorrowedException("User has already borrowed the maximum number of books");
         }
 
